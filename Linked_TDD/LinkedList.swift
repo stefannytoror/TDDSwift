@@ -10,7 +10,7 @@ import Foundation
 
 
 class LinkedList<T:Comparable> {
-    var head: Node<T>?
+    private var head: Node<T>?
     var size: Int {
             return getSize()
         }
@@ -32,12 +32,49 @@ class LinkedList<T:Comparable> {
         newNode.next = pointer
     }
 
-    private func getSize() -> Int {
+    func delete(_ data: T) {
         var pointer = head
-        var size = 0
-        while (pointer != nil) {
-            size += 1
+        var prevPointer: Node<T>?
+
+        // TODO: Change force unrapped
+        while pointer != nil, pointer!.data < data {
+            prevPointer = pointer
             pointer = pointer?.next
+        }
+        if head == nil || pointer == head {
+            head = pointer?.next
+        }
+        prevPointer?.next = pointer?.next
+        pointer?.next = nil
+    }
+    
+    func getValues() -> [T]? {
+        var array: [T]? = []
+        forEach { value in
+            array?.append(value)
+        }
+        return array
+    }
+
+    func printData() {
+        forEach { value in
+            print(value)
+        }
+    }
+
+    func forEach(_ completionHandler: @escaping (_ data: T) -> Void) {
+        var pointer = head
+        while (pointer != nil) {
+            // Call the function
+            completionHandler(pointer!.data)
+            pointer = pointer?.next
+        }
+    }
+
+    private func getSize() -> Int {
+        var size = 0
+        forEach { value in
+            size += 1
         }
         return size
     }
